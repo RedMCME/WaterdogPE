@@ -32,7 +32,8 @@ import dev.waterdog.waterdogpe.player.HandshakeEntry;
 import dev.waterdog.waterdogpe.player.HandshakeUtils;
 import dev.waterdog.waterdogpe.player.ProxiedPlayer;
 import dev.waterdog.waterdogpe.utils.types.ProxyListenerInterface;
-
+import com.nukkitx.protocol.bedrock.v567.Bedrock_v567;
+import com.nukkitx.protocol.bedrock.v567.Bedrock_v567patch;
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
 
@@ -155,14 +156,16 @@ public class LoginUpstreamHandler implements BedrockPacketHandler {
                 return true;
             }
 
+			String minecraftVersion = protocol.getMinecraftVersion();
             // Thank you Mojang: this version includes protocol changes, but protocol version was not increased.
-            if (protocol.equals(ProtocolVersion.MINECRAFT_PE_1_19_60) && handshakeEntry.getClientData().has("GameVersion") &&
-                    ProtocolVersion.MINECRAFT_PE_1_19_62.getMinecraftVersion().equals(handshakeEntry.getClientData().get("GameVersion").getAsString())) {
+            if (packet.getProtocolVersion() == Bedrock_v567.V567_CODEC.getProtocolVersion() && handshakeEntry.getClientData().has("GameVersion") &&
+                !handshakeEntry.getClientData().get("GameVersion").getAsString().equals("1.19.60")) {
                 protocol = ProtocolVersion.MINECRAFT_PE_1_19_62;
-                this.session.setPacketCodec(protocol.getCodec());
+                this.session.setPacketCodec(Bedrock_v567patch.BEDROCK_V567PATCH);
+				minecraftVersion = "1.19.62";
             }
 
-            this.proxy.getLogger().info("[" + this.session.getAddress() + "|" + handshakeEntry.getDisplayName() + "] <-> Upstream has connected (protocol=" + protocol.getProtocol() + "version=" + protocol.getMinecraftVersion() +")");
+            this.proxy.getLogger().info("[" + this.session.getAddress() + "|" + handshakeEntry.getDisplayName() + "] <-> Upstream has connected (protocol=" + protocol.getProtocol() + "version=" + minecraftVersion +")");
             LoginData loginData = handshakeEntry.buildData(this.session, this.proxy);
 
             PlayerPreLoginEvent loginEvent = new PlayerPreLoginEvent(ProxiedPlayer.class, loginData, this.session.getAddress());

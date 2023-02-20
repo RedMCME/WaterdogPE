@@ -47,3 +47,5 @@ buildNumber.properties
 config.yml
 lang.ini
 plugins/
+
+.DS_Store

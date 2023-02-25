@@ -19,11 +19,11 @@ import com.nukkitx.protocol.bedrock.BedrockPacketCodec;
 import com.nukkitx.protocol.bedrock.v567.BedrockPacketHelper_v567patch;
 import dev.waterdog.waterdogpe.network.protocol.ProtocolVersion;
 
-public class BedrockCodec568 extends BedrockCodec567 {
+public class BedrockCodec568legacy extends BedrockCodec567 {
 
     @Override
     public ProtocolVersion getProtocol() {
-        return ProtocolVersion.MINECRAFT_PE_1_19_63;
+        return ProtocolVersion.MINECRAFT_PE_1_19_62;
     }
 
     @Override
